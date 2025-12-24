@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tokopedia Image Downloader</title>
+<style>
+body { font-family: system-ui; padding: 16px }
+input, button {
+  width: 100%; padding: 12px; margin-top: 8px;
+}
+button {
+  background: #03ac0e; color: white;
+  font-weight: bold; border: none;
+}
+img { width: 100%; margin-top: 10px; border-radius: 10px }
+</style>
+</head>
+<body>
+
+<h3>📥 Tokopedia Image Downloader</h3>
+<input id="url" placeholder="Paste link produk Tokopedia">
+<button onclick="load()">Ambil Gambar</button>
+
+<div id="result"></div>
+
+<script>
+async function load() {
+  const url = document.getElementById("url").value;
+  const result = document.getElementById("result");
+  result.innerHTML = "⏳ Memuat...";
+
+  const res = await fetch("/api/images", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url })
+  });
+
+  const data = await res.json();
+  result.innerHTML = "";
+
+  if (!data.length) {
+    result.innerHTML = "❌ Tidak ada gambar";
+    return;
+  }
+
+  data.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    result.appendChild(img);
+  });
+}
+</script>
+
+</body>
+</html>
